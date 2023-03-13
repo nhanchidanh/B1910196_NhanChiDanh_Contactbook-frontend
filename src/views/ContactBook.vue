@@ -2,10 +2,15 @@
   <div class="page row">
     <div class="col-md-12"><InputSearch v-model="searchText" /></div>
     <div class="mt-3 col-md-6">
-      <h4>
-        Danh bạ
-        <i class="fas fa-address-book"></i>
-      </h4>
+      <div class="d-flex justify-content-between mb-3">
+        <h4>
+          Danh bạ có {{ filteredContactsCount }} liên hệ
+          <i class="fas fa-address-book"></i>
+        </h4>
+        <button class="btn btn-outline-warning" @click="checkFavorite">
+          Favorite
+        </button>
+      </div>
       <ContactList
         v-if="filteredContactsCount > 0"
         :contacts="filteredContacts"
@@ -62,6 +67,7 @@ export default {
       contacts: [],
       activeIndex: -1,
       searchText: "",
+      isFavorite: false,
     };
   },
 
@@ -104,11 +110,25 @@ export default {
   },
 
   methods: {
+    checkFavorite() {
+      this.isFavorite = !this.isFavorite;
+      // console.log(this.isFavorite);
+      this.refreshList();
+    },
     async retrieveContacts() {
-      try {
-        this.contacts = await ContactService.getAll();
-      } catch (error) {
-        console.log(error);
+      console.log(this.isFavorite);
+      if (this.isFavorite) {
+        try {
+          this.contacts = await ContactService.getFavorite();
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        try {
+          this.contacts = await ContactService.getAll();
+        } catch (error) {
+          console.log(error);
+        }
       }
     },
 

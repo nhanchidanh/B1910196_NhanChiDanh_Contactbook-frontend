@@ -22,6 +22,11 @@ export default {
       @click="updateActiveIndex(index)"
     >
       {{ contact.name }}
+      <i
+        class="fa-solid fa-thumbs-up float-right"
+        v-if="contact.favorite"
+        :class="index == activeIndex ? 'text-light' : 'text-primary'"
+      ></i>
     </li>
   </ul>
 </template>
